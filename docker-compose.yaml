@@ -1,0 +1,46 @@
+#yebnili containers lel app
+version: '3.8'
+services:
+    admin:
+      image: internship-docker-image
+      command: bash -c "php artisan serve --host 0.0.0.0 | php artisan rabbitmq:consume"
+      volumes:
+      - .:/app
+      - /app/vendor
+      ports:
+        - 8000:8000
+        #port inside docker container and other that we want to show to our localhost
+      networks:
+        servicephp:
+          ipv4_address: 10.5.0.5
+      depends_on:
+        - mongodb
+
+    mongodb:
+      image: mongo:latest
+      container_name: mongodbb
+      environment:
+        MONGO_INITDB_DATABASE: mongo
+        MONGO_INITDB_ROOT_USERNAME: root
+        MONGO_INITDB_ROOT_PASSWORD: root
+
+        #lport eli bch naamlou expose
+      ports:
+          - 27017:27017
+      networks:
+        servicephp:
+          ipv4_address: 10.5.0.4
+      volumes:
+        - ./init-mongo.js:/docker-entrypoint-initdb.d/init-mongo-js:ro
+        - ./storage/database:/data/db
+
+networks:
+  servicephp:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
+          gateway: 10.5.0.1
+
+#jenssegers/mongodb composer package for laravel
+
