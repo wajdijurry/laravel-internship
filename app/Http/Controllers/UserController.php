@@ -41,7 +41,7 @@ class UserController extends Controller
         );
 
         $token = $this->repository->createToken((string) $user->_id);
-        return response()->json(['token' => $token]);
+        return response()->json(['data' => $token]);
     }
 
 
@@ -72,7 +72,7 @@ class UserController extends Controller
                     if(!empty($token)){
                         $token = $this->repository->updateToken((string) $user->_id);
                         return response()->json([
-                            'token' => $token->token
+                            'data' => $token->toArray()
                         ]);
                     } else {
                         return response()->json([

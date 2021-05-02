@@ -96,6 +96,7 @@ class PostRepository
             $post->is_liked= \DB::table('likes')->where('user_id', $userId)
                 ->where('post_id', (string) $post->_id)
                 ->exists();
+            $post->is_owner = $post->user_id == $userId;
             return $post;
         });
         return $posts;
