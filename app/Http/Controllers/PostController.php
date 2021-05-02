@@ -43,10 +43,11 @@ class PostController
         try {
             $post = $this->repository->editPost($id, $request->get('body'));
         } catch (\Throwable $exception) {
-            exit ('post was not updated');
+            return \response()->json([
+                'success' => false,
+                'message' => 'Post not found'
+            ], 404);
         }
-
-        return response()->json($post->toArray());
     }
 
 
@@ -58,7 +59,10 @@ class PostController
         try {
             $this->repository->deletePost($id);
         } catch (\Throwable $exception) {
-            exit ('post was not deleted');
+            return \response()->json([
+                'success' => false,
+                'message' => 'Post not found'
+            ], 404);
         }
 
         return response(null, 204);

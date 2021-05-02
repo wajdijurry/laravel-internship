@@ -45,7 +45,7 @@ class PostRepository
     {
         $post = Post::firstWhere('_id',$id);
         if (!$post){
-            exit ('post not found');
+            throw new \Exception('post not found');
         }
 
         $post->body = $body;
