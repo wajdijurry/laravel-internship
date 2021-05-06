@@ -29,7 +29,7 @@ class PostController
                 $request->get('user_id')
             );
         } catch (\Throwable $exception) {
-            exit('post not created');
+            throw new \Exception('post not created');
         }
 
         return response()->json($post->toArray());
@@ -71,11 +71,25 @@ class PostController
     public function like($id, Request $request)
     {
         try {
-            $data = $this->repository->markLike($id, $request->get('user_id'));
+            $data = $this->repository->markLike(
+                $id,
+                $request->get('user_id')
+            );
             return response($data, 204);
         } catch (\Throwable $exception){
             exit('like not marked');
         }
+    }
+
+    public function unlike($id, Request $request)
+    {
+        try {
+            $like = $this->repository->dislike($id, $request->get('user_id'));
+        } catch (\Throwable $exception){
+            throw new \Exception('unlike not marked');
+        }
+
+        return response(null,204);
     }
 
     /**

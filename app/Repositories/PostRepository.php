@@ -65,26 +65,46 @@ class PostRepository
         $post = Post::firstWhere('_id',$id);
 
         if (!$post){
-            exit ('post not found');
+            throw new \Exception('post not found');
         }
 
         return $post->delete();
     }
 
-    public function markLike ($id, $userId)
+    public function markLike ($id, String $userId)
     {
-
-        {
             $post = Post::firstWhere('_id', $id);
 
             if (!$post) {
-                exit ('post not found');
+                throw new \Exception('post not found');
             }
 
             Like::create([
                 'post_id' => $id,
                 'user_id' => $userId
             ]);
+        }
+
+    public function dislike ($id, String $userId)
+    {
+        $post = Post::firstWhere('_id',$id);
+
+        if (!$post){
+            throw new \Exception('post not found');
+        }
+        $like = $post->likes()
+            ->where('user_id', $userId)
+            ->first();
+
+        if ($like != null){
+            $post->is_liked= \DB::table('likes')
+                ->where('user_id', $userId)
+                ->where('post_id', (string) $post->_id)
+                ->exists();
+
+            if($post->is_liked) {
+                return $like->delete();
+            }
         }
     }
 
