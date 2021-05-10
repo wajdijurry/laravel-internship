@@ -3,6 +3,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\PostLiked;
+use App\Models\User;
 use App\Repositories\PostRepository;
 use Illuminate\Http\Request;
 
@@ -71,11 +73,15 @@ class PostController
     public function like($id, Request $request)
     {
         try {
-            $data = $this->repository->markLike(
+            $post = $this->repository->markLike(
                 $id,
                 $request->get('user_id')
             );
-            return response($data, 204);
+
+//            if ($post->user_id != $request->get('user_id')) {
+                PostLiked::dispatch($id, User::firstWhere('_id', $request->get('user_id'))->name);
+//            }
+            return response(null, 204);
         } catch (\Throwable $exception){
             exit('like not marked');
         }

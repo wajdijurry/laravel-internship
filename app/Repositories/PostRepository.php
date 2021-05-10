@@ -83,6 +83,8 @@ class PostRepository
                 'post_id' => $id,
                 'user_id' => $userId
             ]);
+
+            return $post;
         }
 
     public function dislike ($id, String $userId)

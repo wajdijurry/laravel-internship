@@ -54,7 +54,7 @@ class worker extends Command
      */
     public function handle()
     {
-        $connection = new AMQPStreamConnection('172.17.0.1', 5672, 'guest', 'guest');
+        $connection = new AMQPStreamConnection('172.18.0.1', 5672, 'guest', 'guest');
         $channel = $connection->channel();
 
         $channel->queue_declare(self::QUEUE_NAME, false, false, false, false);
