@@ -54,7 +54,12 @@ class worker extends Command
      */
     public function handle()
     {
-        $connection = new AMQPStreamConnection('172.18.0.1', 5672, 'guest', 'guest');
+        $connection = new AMQPStreamConnection(
+            env('RABBITMQ_HOST'),
+            env('RABBITMQ_PORT'),
+            env('RABBITMQ_USER'),
+            env('RABBITMQ_PASSWORD')
+        );
         $channel = $connection->channel();
 
         $channel->queue_declare(self::QUEUE_NAME, false, false, false, false);
