@@ -78,9 +78,14 @@ class PostController
                 $request->get('user_id')
             );
 
-//            if ($post->user_id != $request->get('user_id')) {
-                PostLiked::dispatch($id, User::firstWhere('_id', $request->get('user_id'))->name);
-//            }
+            if ($post->user_id != $request->get('user_id')) {
+                PostLiked::dispatch(
+                    $id,
+                    User::firstWhere('_id', $request->get('user_id'))->name,
+                    $request->get('user_id'),
+                    $post->user_id
+                );
+            }
             return response(null, 204);
         } catch (\Throwable $exception){
             exit('like not marked');
