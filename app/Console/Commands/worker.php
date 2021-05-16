@@ -41,8 +41,8 @@ class worker extends Command
     public function __construct()
     {
         $this->httpClient = new Client([
-            'base_uri' => 'http://localhost:8000/api',
-            'timeout' => 10
+            'base_uri' => env('API_HOST'),
+            'timeout' => env('API_TIMEOUT')
         ]);
         parent::__construct();
     }

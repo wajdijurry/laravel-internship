@@ -1,9 +1,11 @@
 #yebnili containers lel app
 version: '3.1'
 services:
-    admin:
+    php-api:
       image: internship-docker-image
-      command: bash -c "php artisan serve --host 0.0.0.0 | php artisan rabbitmq:consume"
+      build:
+        context: .
+      command: php artisan serve --host 0.0.0.0
       volumes:
       - .:/app
       - /app/vendor
@@ -12,9 +14,21 @@ services:
         #port inside docker container and other that we want to show to our localhost
       networks:
         servicephp:
-          ipv4_address: 12.5.0.5
+          ipv4_address: 12.5.0.7
       depends_on:
         - mongo-laravel
+
+    php-worker:
+      image: internship-docker-image
+      command: php artisan rabbitmq:consume
+      volumes:
+      - .:/app
+      - /app/vendor
+      networks:
+        servicephp:
+          ipv4_address: 12.5.0.6
+      depends_on:
+        - php-api
 
     mongo-laravel:
       image: mongo:latest
